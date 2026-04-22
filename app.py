@@ -31,8 +31,8 @@ PERGUNTAS: dict[str, list[dict]] = {
         {
             "pergunta": "Qual foi o maior perrengue que o casal já passou juntos?",
             "opcoes": [
-                "Pagar 200€ pra chegar a tempo na estação de Milão.",
-                "Gaivotas atacarem o drone no Algarve e depois nos atacarem.",
+                "Pagar 200€ de táxi pra chegar a tempo na estação de Milão.",
+                "Gaivotas atacarem o drone no Algarve e depois atacarem o casal.",
                 "Parar uma festa para procurar um telefone por 30min (estava no bolso da noiva).",
             ],
             "correta": 0,
@@ -99,7 +99,7 @@ PERGUNTAS: dict[str, list[dict]] = {
                 "Porque tem uma profissão interessante e é preciso ter amigos que saibam disso.",
                 "Porque não tinha mais ninguém para ele ser amigo.",
                 "Porque você contou uma piada engraçada uma vez há anos atrás.",
-                "Poque você é companheiro, irmão, amigo e pau pra toda obra. Ele ssabe que pode contar com você sempre.",
+                "Poque você é companheiro, irmão, amigo e pau pra toda obra. Ele sabe que pode contar com você sempre.",
                 
             ],
             "correta": 3,
@@ -118,8 +118,8 @@ PERGUNTAS: dict[str, list[dict]] = {
         {
             "pergunta": "Qual foi o maior perrengue que o casal já passou juntos?",
             "opcoes": [
-                "Pagar 200€ pra chegar a tempo na estação de Milão.",
-                "Gaivotas atacarem o drone no Algarve e depois nos atacarem.",
+                "Pagar 200€ de táxi pra chegar a tempo na estação de Milão.",
+                "Gaivotas atacarem o drone no Algarve e depois atacarem o casal.",
                 "Parar uma festa para procurar um telefone por 30min (estava no bolso da noiva).",
             ],
             "correta": 0,
@@ -186,7 +186,7 @@ PERGUNTAS: dict[str, list[dict]] = {
                 "Porque tem uma profissão interessante e é preciso ter amigos que saibam disso.",
                 "Porque não tinha mais ninguém para ele ser amigo.",
                 "Porque você contou uma piada engraçada uma vez há anos atrás.",
-                "Poque você é companheiro, irmão, amigo e pau pra toda obra. Ele ssabe que pode contar com você sempre.",
+                "Poque você é companheiro, irmão, amigo e pau pra toda obra. Ele sabe que pode contar com você sempre.",
                 
             ],
             "correta": 3,
@@ -205,8 +205,8 @@ PERGUNTAS: dict[str, list[dict]] = {
         {
             "pergunta": "Qual foi o maior perrengue que o casal já passou juntos?",
             "opcoes": [
-                "Pagar 200€ pra chegar a tempo na estação de Milão.",
-                "Gaivotas atacarem o drone no Algarve e depois nos atacarem.",
+                "Pagar 200€ de táxi pra chegar a tempo na estação de Milão.",
+                "Gaivotas atacarem o drone no Algarve e depois atacarem o casal.",
                 "Parar uma festa para procurar um telefone por 30min (estava no bolso da noiva).",
             ],
             "correta": 0,
@@ -273,7 +273,7 @@ PERGUNTAS: dict[str, list[dict]] = {
                 "Porque tem uma profissão interessante e é preciso ter amigos que saibam disso.",
                 "Porque não tinha mais ninguém para ele ser amigo.",
                 "Porque você contou uma piada engraçada uma vez há anos atrás.",
-                "Poque você é companheiro, irmão, amigo e pau pra toda obra. Ele ssabe que pode contar com você sempre.",
+                "Poque você é companheiro, irmão, amigo e pau pra toda obra. Ele sabe que pode contar com você sempre.",
                 
             ],
             "correta": 3,
@@ -292,8 +292,8 @@ PERGUNTAS: dict[str, list[dict]] = {
         {
             "pergunta": "Qual foi o maior perrengue que o casal já passou juntos?",
             "opcoes": [
-                "Pagar 200€ pra chegar a tempo na estação de Milão.",
-                "Gaivotas atacarem o drone no Algarve e depois nos atacarem.",
+                "Pagar 200€ de táxi pra chegar a tempo na estação de Milão.",
+                "Gaivotas atacarem o drone no Algarve e depois atacarem o casal.",
                 "Parar uma festa para procurar um telefone por 30min (estava no bolso da noiva).",
             ],
             "correta": 0,
@@ -360,7 +360,7 @@ PERGUNTAS: dict[str, list[dict]] = {
                 "Porque tem uma profissão interessante e é preciso ter amigos que saibam disso.",
                 "Porque não tinha mais ninguém para ele ser amigo.",
                 "Porque você contou uma piada engraçada uma vez há anos atrás.",
-                "Poque você é companheiro, irmão, amigo e pau pra toda obra. Ele ssabe que pode contar com você sempre.",
+                "Poque você é companheiro, irmão, amigo e pau pra toda obra. Ele sabe que pode contar com você sempre.",
                 
             ],
             "correta": 3,
@@ -379,8 +379,8 @@ PERGUNTAS: dict[str, list[dict]] = {
         {
             "pergunta": "Qual foi o maior perrengue que o casal já passou juntos?",
             "opcoes": [
-                "Pagar 200€ pra chegar a tempo na estação de Milão.",
-                "Gaivotas atacarem o drone no Algarve e depois nos atacarem.",
+                "Pagar 200€ de táxi pra chegar a tempo na estação de Milão.",
+                "Gaivotas atacarem o drone no Algarve e depois atacarem o casal.",
                 "Parar uma festa para procurar um telefone por 30min (estava no bolso da noiva).",
             ],
             "correta": 0,
@@ -447,7 +447,7 @@ PERGUNTAS: dict[str, list[dict]] = {
                 "Porque tem uma profissão interessante e é preciso ter amigos que saibam disso.",
                 "Porque não tinha mais ninguém para ele ser amigo.",
                 "Porque você contou uma piada engraçada uma vez há anos atrás.",
-                "Poque você é companheiro, irmão, amigo e pau pra toda obra. Ele ssabe que pode contar com você sempre.",
+                "Poque você é companheiro, irmão, amigo e pau pra toda obra. Ele sabe que pode contar com você sempre.",
                 
             ],
             "correta": 3,
@@ -702,19 +702,19 @@ def tela_resultado() -> None:
     st.divider()
 
     if acertos == len(perguntas):
-        st.success("Parabens! Voce acertou tudo e encontrou o seu Pergaminho Oculto!")
+        st.success("Parabéns! Você acertou tudo e encontrou o seu Pergaminho Oculto!")
         caminho_imagem = os.path.join("imagens", f"{usuario}.png")
         if os.path.exists(caminho_imagem):
             st.image(caminho_imagem, use_container_width=True)
         else:
-            st.error("Imagem do tesouro nao encontrada.")
+            st.error("Imagem do tesouro não encontrada.")
 
         if st.button("Jogar de novo", use_container_width=True):
             reiniciar_questionario()
             st.rerun()
     else:
-        st.warning(f"Voce acertou {percentual:.0f}% das questoes!")
-        if st.button("Reiniciar Questionario", use_container_width=True):
+        st.warning(f"Voce acertou {percentual:.0f}% das questões! Tente novamente!")
+        if st.button("Reiniciar Questionário", use_container_width=True):
             reiniciar_questionario()
             st.rerun()
 
