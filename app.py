@@ -465,6 +465,14 @@ def _carregar_audio_bytes() -> bytes:
 
 
 def injetar_player_audio() -> None:
+    # start_time=197 only on the very first play; subsequent reruns use 0
+    # so the music doesn't jump back to 3:17 every time the page rerenders.
+    if not st.session_state.get("audio_iniciado"):
+        start = 197
+        st.session_state.audio_iniciado = True
+    else:
+        start = 0
+
     st.markdown(
         '<style>[data-testid="stAudio"]{'
         'position:absolute;width:1px;height:1px;'
@@ -474,7 +482,7 @@ def injetar_player_audio() -> None:
     st.audio(
         _carregar_audio_bytes(),
         format="audio/mp4",
-        start_time=197,
+        start_time=start,
         autoplay=True,
         loop=True,
     )
@@ -488,6 +496,7 @@ _CHAVES_PADRAO: dict = {
     "usuario_logado": None,
     "respostas": {},
     "submetido": False,
+    "audio_iniciado": False,
 }
 
 
@@ -559,8 +568,8 @@ def tela_questionario() -> None:
             st.rerun()
 
     st.info(
-        "Bem-vindo ao Caça ao Tesouro! Responda às perguntas sobre as histórias "
-        "dos noivos. Você precisa acertar **TODAS** para chegar ao tesouro final."
+        "Bem-vindo ao Quizz do PArgaminho Oculto! Responda às perguntas sobre as histórias "
+        "dos noivos. Você precisa acertar **TODAS** para chegar ao final."
     )
     st.divider()
 
@@ -616,7 +625,7 @@ def tela_resultado() -> None:
     st.divider()
 
     if acertos == len(perguntas):
-        st.success("Parabens! Voce acertou tudo e encontrou o seu tesouro!")
+        st.success("Parabens! Voce acertou tudo e encontrou o seu Pergaminho Oculto!")
         caminho_imagem = os.path.join("imagens", f"{usuario}.png")
         if os.path.exists(caminho_imagem):
             st.image(caminho_imagem, use_container_width=True)
@@ -644,14 +653,17 @@ def main() -> None:
         layout="centered",
     )
     init_state()
-    injetar_player_audio()
 
     if st.session_state.usuario_logado is None:
         tela_login()
-    elif not st.session_state.submetido:
-        tela_questionario()
     else:
-        tela_resultado()
+        # Audio is injected only after login so the browser's autoplay policy
+        # is satisfied — the user just clicked "Validar" (user interaction).
+        injetar_player_audio()
+        if not st.session_state.submetido:
+            tela_questionario()
+        else:
+            tela_resultado()
 
 
 if __name__ == "__main__":
