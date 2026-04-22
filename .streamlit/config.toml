@@ -1,0 +1,4 @@
+[server]
+# Serve files from the ./static folder at /app/static/<filename>
+# https://docs.streamlit.io/develop/concepts/configuration/serving-static-files
+enableStaticServing = true

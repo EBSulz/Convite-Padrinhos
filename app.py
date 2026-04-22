@@ -1,7 +1,9 @@
+import base64
 import os
 from datetime import date
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 # ---------------------------------------------------------------------------
 # Dados
@@ -456,36 +458,112 @@ PERGUNTAS: dict[str, list[dict]] = {
 # ---------------------------------------------------------------------------
 # Audio player
 # ---------------------------------------------------------------------------
+# st.audio(autoplay) runs after a server round-trip, so the browser no longer
+# treats it as a direct user gesture — autoplay is blocked. This iframe calls
+# audio.play() from an onclick handler in the same document, which every
+# browser allows.
+# Streamlit static serving is not used for this file: .mp4 is not in the
+# list of content types that get a correct MIME (others get text/plain), so
+# <audio src="/app/static/..."> would break. A data: URL with base64 is used.
 
 @st.cache_data(show_spinner=False)
-def _carregar_audio_bytes() -> bytes:
-    caminho = os.path.join("song", "The Lord of the Rings Music - The Fellowship.mp4")
-    with open(caminho, "rb") as f:
-        return f.read()
+def _data_url_audio() -> str:
+    musica = os.path.join("song", "The Lord of the Rings Music - The Fellowship.mp4")
+    with open(musica, "rb") as f:
+        b64 = base64.b64encode(f.read()).decode("ascii")
+    return f"data:audio/mp4;base64,{b64}"
+
+
+_AUDIO_HTML = """<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<style>
+  body {{ margin:0; font-family: system-ui, sans-serif; background: transparent; }}
+  .bar {{
+    display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px;
+    padding:10px 14px;
+    background: linear-gradient(90deg, #1a1a2e, #16213e);
+    color: #e8e8e8; border-radius: 10px; font-size: 14px; max-width: 100%;
+  }}
+  button {{
+    background: #c9a227; color: #1a1a1a; border: none;
+    padding: 9px 18px; border-radius: 8px; font-weight: 600; cursor: pointer;
+  }}
+  button:hover {{ filter: brightness(1.08); }}
+  .ok {{ color: #a8d5a2; font-size: 13px; }}
+  .hint {{ color: #9aa0a6; font-size: 12px; }}
+  .hidden {{ display: none !important; }}
+</style>
+</head>
+<body>
+<audio id="bg" src="__SRC__" preload="none"></audio>
+<div class="bar" id="wrap">
+  <span id="line1">Para uma experiência completa, ative a</span>
+  <button type="button" id="playBtn">Trilha Sonora</button>
+  <span class="ok hidden" id="ok">!</span>
+</div>
+<script>
+(function() {{
+  var a = document.getElementById("bg");
+  var POS = "padrinhos_audio_time";
+  // Limpa posições antigas (gravadas quando havia play automático no canplay)
+  try {{
+    if (!localStorage.getItem("padrinhos_player_v2")) {{
+      localStorage.removeItem(POS);
+      localStorage.setItem("padrinhos_player_v2", "1");
+    }}
+  }} catch (e) {{}}
+  // 3:17 — só o clique inicia; sem play ao carregar (evita avanço em segundo plano)
+  var START_SEC = 197;
+  var btn = document.getElementById("playBtn");
+  var line1 = document.getElementById("line1");
+  var ok = document.getElementById("ok");
+
+  function setPlayingUi() {{
+    line1.classList.add("hidden");
+    btn.classList.add("hidden");
+    ok.classList.remove("hidden");
+  }}
+
+  a.addEventListener("ended", function() {{
+    try {{ localStorage.removeItem(POS); }} catch (e) {{}}
+    a.currentTime = 0;
+    a.play().catch(function(){{}});
+  }});
+
+  setInterval(function() {{
+    if (!a.paused && !a.ended) {{
+      try {{ localStorage.setItem(POS, String(a.currentTime)); }} catch (e) {{}}
+    }}
+  }}, 400);
+
+  function seekAndPlay(seconds) {{
+    a.currentTime = seconds;
+    return a.play();
+  }}
+
+  // Primeiro clique: 3:17 (197 s). Clicar de novo o mesmo botão: — sem botão após o primeiro
+  // Se o iframe for recriado a meio da jornada, POS guarda a posição para retomar.
+  btn.addEventListener("click", function() {{
+    var saved = localStorage.getItem(POS);
+    var sec = (saved !== null && !isNaN(parseFloat(saved)))
+      ? parseFloat(saved)
+      : START_SEC;
+    seekAndPlay(sec)
+      .then(function() {{ setPlayingUi(); }})
+      .catch(function() {{}});
+  }});
+}})();
+</script>
+</body>
+</html>"""
 
 
 def injetar_player_audio() -> None:
-    # start_time=197 only on the very first play; subsequent reruns use 0
-    # so the music doesn't jump back to 3:17 every time the page rerenders.
-    if not st.session_state.get("audio_iniciado"):
-        start = 197
-        st.session_state.audio_iniciado = True
-    else:
-        start = 0
-
-    st.markdown(
-        '<style>[data-testid="stAudio"]{'
-        'position:absolute;width:1px;height:1px;'
-        'overflow:hidden;clip:rect(0,0,0,0);}</style>',
-        unsafe_allow_html=True,
-    )
-    st.audio(
-        _carregar_audio_bytes(),
-        format="audio/mp4",
-        start_time=start,
-        autoplay=True,
-        loop=True,
-    )
+    src = _data_url_audio()
+    html = _AUDIO_HTML.replace("__SRC__", src)
+    components.html(html, height=100)
 
 
 # ---------------------------------------------------------------------------
@@ -496,7 +574,6 @@ _CHAVES_PADRAO: dict = {
     "usuario_logado": None,
     "respostas": {},
     "submetido": False,
-    "audio_iniciado": False,
 }
 
 
@@ -653,17 +730,15 @@ def main() -> None:
         layout="centered",
     )
     init_state()
+    # Same block order on every run so the iframe is not needlessly remounted.
+    injetar_player_audio()
 
     if st.session_state.usuario_logado is None:
         tela_login()
+    elif not st.session_state.submetido:
+        tela_questionario()
     else:
-        # Audio is injected only after login so the browser's autoplay policy
-        # is satisfied — the user just clicked "Validar" (user interaction).
-        injetar_player_audio()
-        if not st.session_state.submetido:
-            tela_questionario()
-        else:
-            tela_resultado()
+        tela_resultado()
 
 
 if __name__ == "__main__":
