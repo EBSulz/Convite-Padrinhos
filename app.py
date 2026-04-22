@@ -645,7 +645,7 @@ def tela_questionario() -> None:
             st.rerun()
 
     st.info(
-        "Bem-vindo ao Quizz do PArgaminho Oculto! Responda às perguntas sobre as histórias "
+        "Bem-vindo ao Quizz do Pergaminho Oculto! Responda às perguntas sobre as histórias "
         "dos noivos. Você precisa acertar **TODAS** para chegar ao final."
     )
     st.divider()
