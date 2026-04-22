@@ -14,7 +14,7 @@ CREDENCIAIS: dict[str, date] = {
     "Bambu": date(1995, 9, 9),
     "Henrique": date(1996, 6, 18),
     "Alfredo": date(1995, 12, 24),
-    "Vitor": date(1996, 10, 18),
+    "Vitor": date(1995, 10, 17),
 }
 
 PERGUNTAS: dict[str, list[dict]] = {
