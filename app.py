@@ -454,6 +454,33 @@ PERGUNTAS: dict[str, list[dict]] = {
 }
 
 # ---------------------------------------------------------------------------
+# Audio player
+# ---------------------------------------------------------------------------
+
+@st.cache_data(show_spinner=False)
+def _carregar_audio_bytes() -> bytes:
+    caminho = os.path.join("song", "The Lord of the Rings Music - The Fellowship.mp4")
+    with open(caminho, "rb") as f:
+        return f.read()
+
+
+def injetar_player_audio() -> None:
+    st.markdown(
+        '<style>[data-testid="stAudio"]{'
+        'position:absolute;width:1px;height:1px;'
+        'overflow:hidden;clip:rect(0,0,0,0);}</style>',
+        unsafe_allow_html=True,
+    )
+    st.audio(
+        _carregar_audio_bytes(),
+        format="audio/mp4",
+        start_time=197,
+        autoplay=True,
+        loop=True,
+    )
+
+
+# ---------------------------------------------------------------------------
 # State management
 # ---------------------------------------------------------------------------
 
@@ -617,6 +644,7 @@ def main() -> None:
         layout="centered",
     )
     init_state()
+    injetar_player_audio()
 
     if st.session_state.usuario_logado is None:
         tela_login()
